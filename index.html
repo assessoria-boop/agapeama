@@ -783,8 +783,8 @@
         Atendimento Imediato
       </a>
     </div>
-    <div class="mapa">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.0765448991233!2d-46.863313299999994!3d-23.203880899999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf272a65121079%3A0x8067a7d72c0d0386!2sR.%20Macei%C3%B3%2C%20381%20-%20Vila%20M%20Genoveva%2C%20Jundia%C3%AD%20-%20SP%2C%2013203-010!5e0!3m2!1spt-BR!2sbr!4v1780405831675!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localização Agapeama Clínica Veterinária"></iframe>
+    <div class="mapa" id="mapaWrap" data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3667.0765448991233!2d-46.863313299999994!3d-23.203880899999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf272a65121079%3A0x8067a7d72c0d0386!2sR.%20Macei%C3%B3%2C%20381%20-%20Vila%20M%20Genoveva%2C%20Jundia%C3%AD%20-%20SP%2C%2013203-010!5e0!3m2!1spt-BR!2sbr!4v1780405831675!5m2!1spt-BR!2sbr" style="background:#e6f2f3;display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="carregarMapa(this)">
+      <span style="font-size:13px;color:#00535d;font-weight:600;">Ver no mapa</span>
     </div>
   </div>
 </div>
@@ -805,6 +805,36 @@
 </a>
 
 <script>
+
+  /* ── Lazy load Google Maps ── */
+  function carregarMapa(el) {
+    if (el.querySelector('iframe')) return;
+    var iframe = document.createElement('iframe');
+    iframe.src = el.dataset.src;
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.style.border = '0';
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    iframe.title = 'Localização Agapeama Clínica Veterinária';
+    el.innerHTML = '';
+    el.style.cursor = 'default';
+    el.appendChild(iframe);
+  }
+  (function () {
+    var wrap = document.getElementById('mapaWrap');
+    if (!wrap) return;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries, obs) {
+        if (entries[0].isIntersecting) {
+          carregarMapa(wrap);
+          obs.disconnect();
+        }
+      }, { rootMargin: '200px' }).observe(wrap);
+    } else {
+      carregarMapa(wrap);
+    }
+  })();
 
   /* ── Carrossel de depoimentos ── */
   var slideAtual = 0;
